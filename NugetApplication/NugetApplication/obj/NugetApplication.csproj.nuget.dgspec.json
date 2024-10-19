@@ -52,6 +52,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "Znode.AspNetCore": {
+              "target": "Package",
+              "version": "[6.4.0-qa, )"
             }
           },
           "imports": [

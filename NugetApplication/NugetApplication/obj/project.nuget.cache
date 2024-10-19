@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "jCFOwiWiW9UN3wx2nb+/E3Ke1h6EousV3Qv44ATPI+70Wgam9uhWHATGiIPXEdBdxI4ej+AeaMSE0wck6AoqdA==",
-  "success": true,
+  "dgSpecHash": "SjF5u42wnhZlzA/cbNQNL9ArEzcY2ohstB/dfkrf6ZelNIf2a6qrt3f+YLOpb7dovKH+NJn+UtGRPiVjTcl55g==",
+  "success": false,
   "projectFilePath": "C:\\GitHub\\projectamla\\NugetApplication\\NugetApplication\\NugetApplication.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\91840\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.2\\microsoft.aspnetcore.openapi.7.0.2.nupkg.sha512",
@@ -12,5 +12,15 @@
     "C:\\Users\\91840\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",
     "C:\\Users\\91840\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.4.0\\swashbuckle.aspnetcore.swaggerui.6.4.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Znode.AspNetCore. No packages exist with this id in source(s): C:\\Program Files\\dotnet\\library-packs, Microsoft Visual Studio Offline Packages, nuget.org",
+      "libraryId": "Znode.AspNetCore",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

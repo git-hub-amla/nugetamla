@@ -456,7 +456,8 @@
   "projectFileDependencyGroups": {
     "net7.0": [
       "Microsoft.AspNetCore.OpenApi >= 7.0.2",
-      "Swashbuckle.AspNetCore >= 6.4.0"
+      "Swashbuckle.AspNetCore >= 6.4.0",
+      "Znode.AspNetCore >= 6.4.0-qa"
     ]
   },
   "packageFolders": {
@@ -511,6 +512,10 @@
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[6.4.0, )"
+          },
+          "Znode.AspNetCore": {
+            "target": "Package",
+            "version": "[6.4.0-qa, )"
           }
         },
         "imports": [
@@ -535,5 +540,16 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Znode.AspNetCore. No packages exist with this id in source(s): C:\\Program Files\\dotnet\\library-packs, Microsoft Visual Studio Offline Packages, nuget.org",
+      "libraryId": "Znode.AspNetCore",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

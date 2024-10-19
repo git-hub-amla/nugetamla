@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Castle.Core" Version="5.1.1" />
+	  <PackageReference Include="Znode.Core2" Version="5.6.1-qa" />
+	  <PackageReference Include="Znode.Core" Version="5.1.1-qa" />
+	  <PackageReference Include="Znode.Core1" Version="5.6.1-qa" />
+
+  </ItemGroup>
+
 </Project>

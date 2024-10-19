@@ -106,7 +106,8 @@
   "projectFileDependencyGroups": {
     "net7.0": [
       "Castle.Core >= 5.1.1",
-      "Znode.Core >= 5.1.1-dev"
+      "Znode.Core >= 5.1.1-dev",
+      "Znode.Core1 >= 5.6.1-dev"
     ]
   },
   "packageFolders": {
@@ -161,6 +162,10 @@
           "Znode.Core": {
             "target": "Package",
             "version": "[5.1.1-dev, )"
+          },
+          "Znode.Core1": {
+            "target": "Package",
+            "version": "[5.6.1-dev, )"
           }
         },
         "imports": [
@@ -184,6 +189,15 @@
     }
   },
   "logs": [
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Znode.Core1. No packages exist with this id in source(s): C:\\Program Files\\dotnet\\library-packs, Microsoft Visual Studio Offline Packages, nuget.org",
+      "libraryId": "Znode.Core1",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    },
     {
       "code": "NU1101",
       "level": "Error",

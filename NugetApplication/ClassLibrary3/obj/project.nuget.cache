@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "towu7j/PSlwie5JOW9cMDdHg7TSvEhyDF93T4RTFkBJU33RpOnYv3uTcDBwKBX1gp8XkoHSLdATrqeZX+2LGlw==",
+  "dgSpecHash": "w8t/Qp9ml6MmsisOig6y8H1wk0WvgmPrliWptB/kUzdsanbxRKHuEsr2IzI5JUNyHeJW5EnanypGhA+9ydcvZQ==",
   "success": false,
   "projectFilePath": "C:\\GitHub\\projectamla\\NugetApplication\\ClassLibrary3\\ClassLibrary3.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,15 @@
     "C:\\Users\\91840\\.nuget\\packages\\system.diagnostics.eventlog\\6.0.0\\system.diagnostics.eventlog.6.0.0.nupkg.sha512"
   ],
   "logs": [
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Znode.Core1. No packages exist with this id in source(s): C:\\Program Files\\dotnet\\library-packs, Microsoft Visual Studio Offline Packages, nuget.org",
+      "libraryId": "Znode.Core1",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    },
     {
       "code": "NU1101",
       "level": "Error",

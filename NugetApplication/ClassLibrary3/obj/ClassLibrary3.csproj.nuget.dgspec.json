@@ -44,6 +44,16 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
+          "dependencies": {
+            "Castle.Core": {
+              "target": "Package",
+              "version": "[5.1.1, )"
+            },
+            "Znode.Core": {
+              "target": "Package",
+              "version": "[5.1.1-dev, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

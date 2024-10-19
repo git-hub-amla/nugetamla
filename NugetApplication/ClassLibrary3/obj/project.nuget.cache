@@ -1,8 +1,21 @@
 {
   "version": 2,
-  "dgSpecHash": "nAlvogwCTQPy9VQkG0xcDuPB5IxGIgZjsgxEtbI4Yj14n3lRrSjwH4k9AUmF6uvPEM7IgEoXoD6di5vC1bZuxQ==",
-  "success": true,
+  "dgSpecHash": "towu7j/PSlwie5JOW9cMDdHg7TSvEhyDF93T4RTFkBJU33RpOnYv3uTcDBwKBX1gp8XkoHSLdATrqeZX+2LGlw==",
+  "success": false,
   "projectFilePath": "C:\\GitHub\\projectamla\\NugetApplication\\ClassLibrary3\\ClassLibrary3.csproj",
-  "expectedPackageFiles": [],
-  "logs": []
+  "expectedPackageFiles": [
+    "C:\\Users\\91840\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
+    "C:\\Users\\91840\\.nuget\\packages\\system.diagnostics.eventlog\\6.0.0\\system.diagnostics.eventlog.6.0.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Znode.Core. No packages exist with this id in source(s): C:\\Program Files\\dotnet\\library-packs, Microsoft Visual Studio Offline Packages, nuget.org",
+      "libraryId": "Znode.Core",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

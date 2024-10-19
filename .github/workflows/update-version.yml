@@ -51,8 +51,9 @@ jobs:
             git config user.name "GitHub Actions"
             git config user.email "actions@github.com"
             git add $PROJECT_FILES
+            # Use the PAT for authentication
             git commit -m "Update version from dev to qa for projects using Znode packages"
-            git push
+            git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/git-hub-amla/projectamla.git HEAD:${{ github.head_ref }}
           else
             echo "No Znode packages found. No changes made."
           fi

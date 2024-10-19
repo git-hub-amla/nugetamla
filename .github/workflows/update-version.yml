@@ -26,26 +26,23 @@ jobs:
         run: |
           # Find all .csproj files
           PROJECT_FILES=$(find . -type f -name "*.csproj")
-
           # Check if any project files were found
           if [ -z "$PROJECT_FILES" ]; then
             echo "No project files found. Skipping version update."
             exit 0
           fi
-
           # Flag to check if any changes were made
           changes_made=false
-
           # Iterate over each project file to find packages
           for PROJECT_FILE in $PROJECT_FILES; do
             # Check if the project file contains any Znode package references
             if grep -q "<PackageReference Include=\"Znode" "$PROJECT_FILE"; then
               echo "Updating version in $PROJECT_FILE"
-              sed -i 's/\(version>.*\)-dev/\1-qa/' "$PROJECT_FILE"
+              # Replace -dev with -qa in the Version attribute of Znode packages
+              sed -i 's/\(Version="\([0-9]*\.[0-9]*\.[0-9]*\)-\)dev/\1qa/' "$PROJECT_FILE"
               changes_made=true
             fi
           done
-
           # Commit changes if any updates were made
           if [ "$changes_made" = true ]; then
             git config user.name "GitHub Actions"

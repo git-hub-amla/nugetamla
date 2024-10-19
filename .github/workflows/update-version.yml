@@ -11,9 +11,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
+      # Step 1: Checkout the repository, including the PR source branch
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Fetch all history for all branches
+          ref: ${{ github.head_ref }}  # Checkout the source branch of the PR
 
       # Step 2: Set up .NET SDK (if required)
       - name: Setup .NET

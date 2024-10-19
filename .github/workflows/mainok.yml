@@ -1,4 +1,4 @@
-name: Update Version for Pull Requests
+name: Update Version for main
 
 on:
   pull_request:

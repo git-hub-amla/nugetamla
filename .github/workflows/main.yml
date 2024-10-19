@@ -1,0 +1,98 @@
+name: Update Version for Pull Requests
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - qa
+      - main
+      - master
+
+jobs:
+  update_version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Request write access to repository contents
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '7.0'
+
+      - name: Update Project Versions
+        run: |
+          PROJECT_FILES=$(find . -type f -name "*.csproj")
+          if [ -z "$PROJECT_FILES" ]; then
+            echo "No project files found. Skipping version update."
+            exit 0
+          fi
+          changes_made=false
+          for PROJECT_FILE in $PROJECT_FILES; do
+            if grep -q "<PackageReference Include=\"Znode" "$PROJECT_FILE"; then
+              echo "Updating version in $PROJECT_FILE"
+              # Replace -dev with -qa in the Version attribute of Znode packages
+              sed -i 's/\(Version="\([0-9]*\.[0-9]*\.[0-9]*\)-\)dev/\1qa/' "$PROJECT_FILE"
+              changes_made=true
+            fi
+          done
+          if [ "$changes_made" = true ]; then
+            git config user.name "GitHub Actions"
+            git config user.email "actions@github.com"
+            git add $PROJECT_FILES
+            git commit -m "Update version from dev to qa for projects using Znode packages"
+            git push origin ${{ github.head_ref }}
+          else
+            echo "No Znode packages found. No changes made."
+          fi
+
+  remove_keywords:
+    runs-on: ubuntu-latest
+    needs: update_version
+    if: github.event.pull_request.base.ref == 'main' || github.event.pull_request.base.ref == 'master'
+    permissions:
+      contents: write  # Request write access to repository contents
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '7.0'
+
+      - name: Remove Version Keywords
+        run: |
+          PROJECT_FILES=$(find . -type f -name "*.csproj")
+          if [ -z "$PROJECT_FILES" ]; then
+            echo "No project files found. Skipping keyword removal."
+            exit 0
+          fi
+          changes_made=false
+          for PROJECT_FILE in $PROJECT_FILES; do
+            if grep -q "<PackageReference Include=\"Znode" "$PROJECT_FILE"; then
+              echo "Removing keywords in $PROJECT_FILE"
+              # Remove -dev or -qa from the Version attribute of Znode packages
+              sed -i 's/\(Version="\([0-9]*\.[0-9]*\.[0-9]*\)\(-dev\|-qa\)\)/\1/' "$PROJECT_FILE"
+              changes_made=true
+            fi
+          done
+          if [ "$changes_made" = true ]; then
+            git config user.name "GitHub Actions"
+            git config user.email "actions@github.com"
+            git add $PROJECT_FILES
+            git commit -m "Remove -dev or -qa from versions in projects using Znode packages"
+            git push origin ${{ github.head_ref }}
+          else
+            echo "No Znode packages found. No changes made."
+          fi

@@ -1,14 +1,13 @@
-name: Remove Version Keywords for Main and Master PRs
+name: Update Version for Pull Requests
 
 on:
   pull_request:
     types: [opened, synchronize]
     branches:
       - main
-      - master
 
 jobs:
-  remove_keywords:
+  update_version:
     runs-on: ubuntu-latest
     permissions:
       contents: write  # Request write access to repository contents
@@ -25,19 +24,18 @@ jobs:
         with:
           dotnet-version: '7.0'
 
-      - name: Remove Version Keywords
+      - name: Update Project Versions
         run: |
           PROJECT_FILES=$(find . -type f -name "*.csproj")
           if [ -z "$PROJECT_FILES" ]; then
-            echo "No project files found. Skipping keyword removal."
+            echo "No project files found. Skipping version update."
             exit 0
           fi
           changes_made=false
           for PROJECT_FILE in $PROJECT_FILES; do
             if grep -q "<PackageReference Include=\"Znode" "$PROJECT_FILE"; then
-              echo "Removing keywords in $PROJECT_FILE"
-              # Remove -dev or -qa from the Version attribute of Znode packages
-              sed -i 's/\(Version="\([0-9]*\.[0-9]*\.[0-9]*\)\(-dev\|-qa\)\)/\1/' "$PROJECT_FILE"
+              echo "Updating version in $PROJECT_FILE"
+              sed -i 's/\(Version="\([0-9]*\.[0-9]*\.[0-9]*\)-\)qa/\/' "$PROJECT_FILE"
               changes_made=true
             fi
           done
@@ -45,8 +43,8 @@ jobs:
             git config user.name "GitHub Actions"
             git config user.email "actions@github.com"
             git add $PROJECT_FILES
-            git commit -m "Remove -dev or -qa from versions in projects using Znode packages"
-            git push origin ${{ github.head_ref }}
+            git commit -m "Update version from dev to qa for projects using Znode packages"
+            git push origin ${{ github.head_ref }}  # Use GITHUB_TOKEN for push
           else
             echo "No Znode packages found. No changes made."
           fi

@@ -25,7 +25,6 @@ jobs:
 
           # Find all csproj files modified in the PR
           git diff --name-only origin/${{ github.base_ref }}..origin/${{ github.head_ref }} | grep '\.csproj$' > csproj_files.txt
-          echo "csproj_files=$(cat csproj_files.txt)" >> $GITHUB_ENV
 
       - name: Check for csproj files
         id: check_csproj_files

@@ -1,11 +1,10 @@
-
 name: Validate Znode10 Package Versions
 
 on:
   pull_request:
     branches:
       - qa
-      - master
+      - main  # Changed from master to main
       - dev
 
 jobs:
@@ -15,23 +14,31 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for all branches
 
       - name: Find csproj files in the pull request
+        id: find_csproj_files
         run: |
+          # Fetch all branches to ensure we can compare
+          git fetch --all
           # Find all csproj files modified in the PR
-          git diff --name-only origin/${{ github.base_ref }}..origin/${{ github.head_ref }} | grep '\.csproj$' > csproj_files.txt
+          git diff --name-only origin/${{ github.event.pull_request.base.ref }}..origin/${{ github.head_ref }} | grep '\.csproj$' > csproj_files.txt
 
-      - name: Validate Znode10 package versions
+      - name: Check for csproj files
+        id: check_csproj_files
         run: |
-          # Define patterns based on branch
-          if [[ "${{ github.ref }}" == "refs/heads/qa" ]]; then
-            version_pattern="-qa"
-          elif [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
-            version_pattern="^[0-9]+\.[0-9]+\.[0-9]+$"
-          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            version_pattern="-dev"
+          if [ ! -s csproj_files.txt ]; then
+            echo "No csproj files found. Skipping validation."
+            echo "skip_validation=true" >> $GITHUB_ENV
+          else
+            echo "csproj files found. Proceeding with validation."
+            echo "skip_validation=false" >> $GITHUB_ENV
           fi
 
+      - name: Validate Znode10 package versions
+        if: env.skip_validation != 'true'
+        run: |
           # Loop through each csproj file and validate package versions
           while IFS= read -r csproj_file; do
             echo "Validating $csproj_file..."
@@ -41,11 +48,33 @@ jobs:
                 # Extract the version part from the package reference
                 version=$(echo "$package_line" | sed -n 's/.*Version="\([^"]*\)".*/\1/p')
 
-                # Check if version matches the expected pattern
-                if [[ ! "$version" =~ $version_pattern ]]; then
-                  echo "Invalid package version in $csproj_file: $package_line"
-                  exit 1
-                fi
+                case "${{ github.event.pull_request.base.ref }}" in
+                  qa)
+                    # For qa branch, check for -qa in the version
+                    if [[ "$version" =~ -qa ]]; then
+                      echo "Invalid package version in $csproj_file: $package_line"
+                      exit 1
+                    fi
+                    ;;
+                  main)
+                    # For main branch, check that -dev or -qa are not present
+                    if [[ "$version" =~ -dev || "$version" =~ -qa ]]; then
+                      echo "Invalid package version in $csproj_file: $package_line"
+                      exit 1
+                    fi
+                    ;;
+                  dev)
+                    # For dev branch, check for -dev in the version
+                    if [[ "$version" =~ -dev ]]; then
+                      echo "Invalid package version in $csproj_file: $package_line"
+                      exit 1
+                    fi
+                    ;;
+                  *)
+                    echo "Unsupported branch: ${{ github.event.pull_request.base.ref }}"
+                    exit 1
+                    ;;
+                esac
               done
             fi
           done < csproj_files.txt

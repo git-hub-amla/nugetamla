@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - qa
-      - master
+      - main  # Changed from master to main
       - dev
 
 jobs:
@@ -22,7 +22,6 @@ jobs:
         run: |
           # Fetch all branches to ensure we can compare
           git fetch --all
-
           # Find all csproj files modified in the PR
           git diff --name-only origin/${{ github.event.pull_request.base.ref }}..origin/${{ github.head_ref }} | grep '\.csproj$' > csproj_files.txt
 
@@ -45,7 +44,7 @@ jobs:
             qa)
               version_pattern="-qa"
               ;;
-            master)
+            main)  # Changed from master to main
               version_pattern="^[0-9]+\.[0-9]+\.[0-9]+$"
               ;;
             dev)
@@ -56,7 +55,6 @@ jobs:
               exit 1
               ;;
           esac
-
           # Loop through each csproj file and validate package versions
           while IFS= read -r csproj_file; do
             echo "Validating $csproj_file..."
@@ -65,7 +63,6 @@ jobs:
               grep '<PackageReference Include="Znode10' "$csproj_file" | while IFS= read -r package_line; do
                 # Extract the version part from the package reference
                 version=$(echo "$package_line" | sed -n 's/.*Version="\([^"]*\)".*/\1/p')
-
                 # Check if version matches the expected pattern
                 if [[ ! "$version" =~ $version_pattern ]]; then
                   echo "Invalid package version in $csproj_file: $package_line"

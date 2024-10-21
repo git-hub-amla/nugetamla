@@ -39,22 +39,6 @@ jobs:
       - name: Validate Znode10 package versions
         if: env.skip_validation != 'true'
         run: |
-          # Define patterns based on the target branch of the PR
-          case "${{ github.event.pull_request.base.ref }}" in
-            qa)
-              version_pattern="-qa"
-              ;;
-            main)  # Changed from master to main
-              version_pattern="^[0-9]+\.[0-9]+\.[0-9]+$"
-              ;;
-            dev)
-              version_pattern="-dev"
-              ;;
-            *)
-              echo "Unsupported branch: ${{ github.event.pull_request.base.ref }}"
-              exit 1
-              ;;
-          esac
           # Loop through each csproj file and validate package versions
           while IFS= read -r csproj_file; do
             echo "Validating $csproj_file..."
@@ -63,11 +47,34 @@ jobs:
               grep '<PackageReference Include="Znode10' "$csproj_file" | while IFS= read -r package_line; do
                 # Extract the version part from the package reference
                 version=$(echo "$package_line" | sed -n 's/.*Version="\([^"]*\)".*/\1/p')
-                # Check if version matches the expected pattern
-                if [[ ! "$version" =~ $version_pattern ]]; then
-                  echo "Invalid package version in $csproj_file: $package_line"
-                  exit 1
-                fi
+
+                case "${{ github.event.pull_request.base.ref }}" in
+                  qa)
+                    # For qa branch, check for -qa in the version
+                    if [[ "$version" =~ -qa ]]; then
+                      echo "Invalid package version in $csproj_file: $package_line"
+                      exit 1
+                    fi
+                    ;;
+                  main)
+                    # For main branch, check that -dev or -qa are not present
+                    if [[ "$version" =~ -dev || "$version" =~ -qa ]]; then
+                      echo "Invalid package version in $csproj_file: $package_line"
+                      exit 1
+                    fi
+                    ;;
+                  dev)
+                    # For dev branch, check for -dev in the version
+                    if [[ "$version" =~ -dev ]]; then
+                      echo "Invalid package version in $csproj_file: $package_line"
+                      exit 1
+                    fi
+                    ;;
+                  *)
+                    echo "Unsupported branch: ${{ github.event.pull_request.base.ref }}"
+                    exit 1
+                    ;;
+                esac
               done
             fi
           done < csproj_files.txt

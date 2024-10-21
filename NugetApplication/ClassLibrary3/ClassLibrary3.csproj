@@ -8,5 +8,6 @@
 	  <PackageReference Include="Znode10.Libraries.Abstract.Plugins" Version="10.0.0-gamma011" />
 	  <PackageReference Include="Znode10.Libraries.Abstract.Plugins" Version="10.0.0-gamma011" />
 	  <PackageReference Include="Znode10.Libraries.Abstract.Plugins" Version="10.0.0-gamma011" />
+	  <PackageReference Include="Znode10.Libraries.Abstract.Plugins" Version="10.0.0-dev-gamma011" />
 
 </Project>

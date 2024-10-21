@@ -47,6 +47,9 @@ jobs:
               grep '<PackageReference Include="Znode10' "$csproj_file" | while IFS= read -r package_line; do
                 # Extract the version part from the package reference
                 version=$(echo "$package_line" | sed -n 's/.*Version="\([^"]*\)".*/\1/p')
+                
+                # Display the package reference being validated
+                echo "Checking package: $package_line"
 
                 case "${{ github.event.pull_request.base.ref }}" in
                   qa)

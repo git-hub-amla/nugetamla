@@ -53,23 +53,23 @@ jobs:
 
                 case "${{ github.event.pull_request.base.ref }}" in
                   qa)
-                    # For qa branch, check for -qa in the version
-                    if [[ "$version" =~ -qa ]]; then
-                      echo "Invalid package version in $csproj_file: $package_line"
+                    # For qa branch, check that -qa is present
+                    if [[ ! "$version" =~ -qa ]]; then
+                      echo "Invalid package version in $csproj_file: $package_line. Expected version to include '-qa'."
                       exit 1
                     fi
                     ;;
                   main)
                     # For main branch, check that -dev or -qa are not present
                     if [[ "$version" =~ -dev || "$version" =~ -qa ]]; then
-                      echo "Invalid package version in $csproj_file: $package_line"
+                      echo "Invalid package version in $csproj_file: $package_line. '-dev' or '-qa' should not be present."
                       exit 1
                     fi
                     ;;
                   dev)
-                    # For dev branch, check for -dev in the version
-                    if [[ "$version" =~ -dev ]]; then
-                      echo "Invalid package version in $csproj_file: $package_line"
+                    # For dev branch, check that -dev is present
+                    if [[ ! "$version" =~ -dev ]]; then
+                      echo "Invalid package version in $csproj_file: $package_line. Expected version to include '-dev'."
                       exit 1
                     fi
                     ;;

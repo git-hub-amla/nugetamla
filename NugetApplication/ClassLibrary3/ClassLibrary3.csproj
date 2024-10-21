@@ -5,5 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+	  <PackageReference Include="Znode10.Libraries.Abstract.Plugins" Version="10.0.0-gamma011" />
+	  <PackageReference Include="Znode10.Libraries.Abstract.Plugins" Version="10.0.0-qa-gamma011" />
+	  <PackageReference Include="Znode10.Libraries.Abstract.Plugins" Version="10.0.0-dev-gamma011" />
 
 </Project>

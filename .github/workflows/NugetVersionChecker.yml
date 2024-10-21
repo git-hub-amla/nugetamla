@@ -1,4 +1,3 @@
-
 name: Validate Znode10 Package Versions
 
 on:
@@ -17,20 +16,42 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Find csproj files in the pull request
+        id: find_csproj_files
         run: |
           # Find all csproj files modified in the PR
           git diff --name-only origin/${{ github.base_ref }}..origin/${{ github.head_ref }} | grep '\.csproj$' > csproj_files.txt
+          echo "csproj_files=$(cat csproj_files.txt)" >> $GITHUB_ENV
+
+      - name: Check for csproj files
+        id: check_csproj_files
+        run: |
+          if [ ! -s csproj_files.txt ]; then
+            echo "No csproj files found. Skipping validation."
+            echo "skip_validation=true" >> $GITHUB_ENV
+          else
+            echo "csproj files found. Proceeding with validation."
+            echo "skip_validation=false" >> $GITHUB_ENV
+          fi
 
       - name: Validate Znode10 package versions
+        if: env.skip_validation != 'true'
         run: |
           # Define patterns based on branch
-          if [[ "${{ github.ref }}" == "refs/heads/qa" ]]; then
-            version_pattern="-qa"
-          elif [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
-            version_pattern="^[0-9]+\.[0-9]+\.[0-9]+$"
-          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            version_pattern="-dev"
-          fi
+          case "${{ github.ref }}" in
+            refs/heads/qa)
+              version_pattern="-qa"
+              ;;
+            refs/heads/master)
+              version_pattern="^[0-9]+\.[0-9]+\.[0-9]+$"
+              ;;
+            refs/heads/dev)
+              version_pattern="-dev"
+              ;;
+            *)
+              echo "Unsupported branch: ${{ github.ref }}"
+              exit 1
+              ;;
+          esac
 
           # Loop through each csproj file and validate package versions
           while IFS= read -r csproj_file; do

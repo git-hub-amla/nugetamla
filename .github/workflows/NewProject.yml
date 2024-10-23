@@ -52,4 +52,4 @@ jobs:
         git commit -m "Add new library: znode.${{ github.event.inputs.project }}.client.${{ github.event.inputs.version }}"
         git push
       env:
-        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        GITHUB_TOKEN: "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"

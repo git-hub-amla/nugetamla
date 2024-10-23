@@ -35,11 +35,13 @@ jobs:
         PROJECT_NAME="znode.${{ github.event.inputs.project }}.client.${{ github.event.inputs.version }}"
         mkdir $PROJECT_NAME
         cd $PROJECT_NAME
-        dotnet new classlib --framework net8.0 --name $PROJECT_NAME
+        dotnet new classlib --name $PROJECT_NAME --output .
+        ls -la
 
     - name: Add Newtonsoft.Json package
       run: |
-        cd "znode.${{ github.event.inputs.project }}.client.${{ github.event.inputs.version }}"
+        PROJECT_NAME="znode.${{ github.event.inputs.project }}.client.${{ github.event.inputs.version }}"
+        cd $PROJECT_NAME
         dotnet add package Newtonsoft.Json
 
     - name: Commit and push changes
